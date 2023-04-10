@@ -92,6 +92,7 @@
             <label class="layui-form-label" for="power">权限</label>
             <div class="layui-input-block">
                 <select name="power" id="power" lay-filter="power">
+                    <option value="1">管理员</option>
                     <option value="2">商家</option>
                 </select>
             </div>
@@ -208,11 +209,13 @@
             $(".image-div").hide();
         }
         $(".opt").hide();
+
         /*设置初始表单*/
         if (power == 1) {
             $(".power").hide();
             $(".dep").hide();
             $(".business").hide();
+            // $(".status").show();
         } else if ($("#power").val() == 2) {
             $(".dep").show();
             $(".business").show();
@@ -328,13 +331,10 @@
             } else {
                 url = "userinfo/save";
             }
-            // if (field.power != 2) {
-            //     /*非商家权限时清除许可证*/
-            //     field.business_license = null
-            // } else {
-            //     field.shop_id = null
-            // }
-
+            if (field.power == 1) {
+                field.shop_id = 0;
+                field.status = 1;
+            }
             $.ajax({
                 url,
                 data: field,
