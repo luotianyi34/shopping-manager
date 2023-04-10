@@ -20,27 +20,27 @@
 <body>
 <div style="width: 90%;margin: 0 30px 0 auto">
   <form id="edit" lay-filter="edit" class="layui-form">
-    <input type="hidden" name="id" id="id" value="<%= department.id %>">
+    <input type="hidden" name="id" id="id" value="<%= shop.id %>">
     <div class="layui-form-item">
-      <label class="layui-form-label" for="name"><span class="x-red">*</span>部门名称</label>
+      <label class="layui-form-label" for="name"><span class="x-red">*</span>店铺名称</label>
       <div class="layui-input-block">
-        <input type="text" name="name" id="name" placeholder="请输入部门名" autocomplete="off"
-               value="<%= department.name %>" lay-verify="required" class="layui-input">
+        <input type="text" name="name" id="name" placeholder="请输入店铺名" autocomplete="off"
+               value="<%= shop.name %>" lay-verify="required" class="layui-input">
       </div>
     </div>
     <div class="layui-form-item">
       <label class="layui-form-label" for="profile">介绍</label>
       <div class="layui-input-block">
         <textarea placeholder="请输入内容" id="profile" name="profile"
-                  class="layui-textarea"><%= department.profile %></textarea>
+                  class="layui-textarea"><%= shop.profile %></textarea>
       </div>
     </div>
     <div class="layui-form-item">
       <label class="layui-form-label" for="status">状态</label>
       <div class="layui-input-block">
         <select name="status" id="status">
-          <option value="1">可用</option>
-          <option value="2">禁用</option>
+          <option value="1">正常</option>
+          <option value="2">违规</option>
         </select>
       </div>
     </div>
@@ -58,7 +58,7 @@
   layui.use(["form"], function () {
     const form = layui.form;
     /*获取状态值*/
-    let status = "<%= department.status %>";
+    let status = "<%= shop.status %>";
     /*状态值存在则表示修改*/
     if (status) {
       $("#status").val(status);
@@ -68,7 +68,7 @@
 
     form.on("submit(submitBtn)", function ({field}) {
       $.ajax({
-        url: "department/update",
+        url: "shop/update",
         data: field,
         method: "post",
         dataType: "json",
