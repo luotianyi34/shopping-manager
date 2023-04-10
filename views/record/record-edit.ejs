@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+  <link rel="stylesheet" href="x-admin/css/font.css">
+  <link rel="stylesheet" href="x-admin/css/xadmin.css">
+  <script type="text/javascript" src="x-admin/js/jquery.min.js"></script>
+  <script src="x-admin/lib/layui/layui.js" charset="utf-8"></script>
+  <script type="text/javascript" src="x-admin/js/xadmin.js"></script>
+  <!--[if lt IE 9]>
+  <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+  <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="margin: 20px">
+  <form id="edit" lay-filter="edit" class="layui-form">
+    <input type="hidden" name="id" id="id" value="<%= record.id %>">
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="car_id">车辆</label>
+      <div class="layui-input-block">
+        <select name="car_id" id="car_id"></select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="record_type">类型</label>
+      <div class="layui-input-block">
+        <select name="record_type" id="record_type">
+          <option value="1">保养</option>
+          <option value="2">维修</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="record_money"><span class="x-red">*</span>花费金额</label>
+      <div class="layui-input-block">
+        <input type="text" name="record_money" id="record_money" placeholder="请输入花费金额" lay-verify="required"
+               value="<%= record.record_money %>" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="record_time">操作时间</label>
+      <div class="layui-input-block">
+        <input type="text" name="record_time" id="record_time" placeholder="请选择操作时间"
+               value="<%= record.record_time %>" readonly class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="content">备注</label>
+      <div class="layui-input-block">
+        <textarea placeholder="请输入备注" id="content" name="content"
+                  class="layui-textarea"><%= record.content %></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="status">状态</label>
+      <div class="layui-input-block">
+        <select name="status" id="status">
+          <option value="1">可用</option>
+          <option value="2">禁用</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-block">
+        <button class="layui-btn" type="submit" lay-submit lay-filter="submitBtn">提交</button>
+      </div>
+    </div>
+  </form>
+</div>
+</body>
+<script>
+
+  layui.use(["form", 'laydate'], function () {
+    const form = layui.form;
+    const laydate = layui.laydate;
+    laydate.render({
+      elem: "#record_time",
+      type: "datetime"
+    })
+    /*获取状态值*/
+    let status = "<%= record.status %>";
+    let record_type = "<%= record.record_type %>";
+    let car_id = "<%= record.car_id %>";
+    /*状态值存在则表示修改*/
+    if (status) {
+      $("#status").val(status);
+      $("#record_type").val(record_type);
+      /*在layui中通过js更新select的值后，必须调用form.render去重新渲染*/
+      form.render();
+    }
+
+    /*加载汽车下拉框*/
+    $.ajax({
+      url: "car/select",
+      method: "get",
+      success(res) {
+        if (res.code === 200) {
+          let $html = "";
+          for (const car of res.data) {
+            if (car.id == car_id) {
+              $html += '<option selected value="' + car.id + '">' + car.car_no + '</option>';
+            } else {
+              $html += '<option value="' + car.id + '">' + car.car_no + '</option>';
+            }
+          }
+          $("#car_id").empty().append($html);
+          form.render();
+        }
+      }
+    });
+
+
+    form.on("submit(submitBtn)", function ({field}) {
+      $.ajax({
+        url: "record/update",
+        data: field,
+        method: "post",
+        dataType: "json",
+        success(res) {
+          if (res.code === 200) {
+            layer.msg((field.id ? "修改" : "添加") + "成功", {icon: 6}, function () {
+              parent.xadmin.add_tab("养护记录", "record/list", true)
+              location.reload()
+            });
+          } else {
+            layer.alert(res.msg, {icon: 5});
+          }
+        }
+      });
+      return false;
+    });
+  });
+</script>
+</html>

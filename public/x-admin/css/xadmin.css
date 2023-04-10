@@ -11,8 +11,8 @@ a{
 html{
     width: 100%;
     height: 100%;
-    overflow-x:hidden; 
-    overflow-y:auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 body{
     width: 100%;
@@ -211,7 +211,7 @@ body{
     /*background: #fff ;*/
 }
 .left-nav #nav li .opened .current{
-    
+
 }
 .left-nav #nav li .sub-menu li:hover{
     /*color: blue;*/
@@ -318,7 +318,7 @@ body{
 .page-content .layui-tab-content .layui-tab-item{
     width: 100%;
     height: 100%;
-    
+
 }
 .page-content .layui-tab-content .layui-tab-item iframe{
     width: 100%;
@@ -433,9 +433,9 @@ table th, table td {
     .page-content{
         left: 60px;
     }
-    .page-content .layui-tab-content .layui-tab-item{
-        -webkit-overflow-scrolling: touch; 
-        overflow-y: scroll; 
+    .page-content .layui-tab-content .layui-tab-item {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: scroll;
     }
     .x-so input.layui-input{
         width: 100%;
@@ -490,8 +490,8 @@ table th, table td {
 .x-admin-sm .layui-nav *{
     font-size: 12px;
 }
-.x-admin-sm  .layui-breadcrumb>*{
-   font-size: 12px; 
+.x-admin-sm  .layui-breadcrumb>* {
+    font-size: 12px;
 }
 .x-admin-sm  .layui-btn,.x-admin-sm .layui-btn-xs,.x-admin-sm .layui-btn-sm{
     font-size: 12px;

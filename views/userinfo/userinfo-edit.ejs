@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="x-admin/css/font.css">
+    <link rel="stylesheet" href="x-admin/css/xadmin.css">
+    <script type="text/javascript" src="x-admin/js/jquery.min.js"></script>
+    <script src="x-admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="x-admin/js/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .image-group {
+            height: 200px;
+            width: 200px;
+            margin-top: 10px;
+            position: relative;
+            border: 1px solid gray;
+        }
+
+        .image-group .image-div {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .image-group .image-div .image {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+
+        .image-group .image-div .image img {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .image-group .image-div .opt {
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, .3);
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-group .image-div .opt .iconfont {
+            font-size: 26px;
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div style="width: 90%;margin: 0 30px 0 auto">
+    <form id="edit" lay-filter="edit" class="layui-form">
+        <input type="hidden" name="id" id="id" value="<%= userinfo.id %>">
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="username"><span class="x-red">*</span>用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" id="username" placeholder="请输入用户名" autocomplete="off"
+                       value="<%= userinfo.username %>" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="nickname"><span class="x-red">*</span>昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" id="nickname" placeholder="请输入昵称" autocomplete="off"
+                       value="<%= userinfo.nickname %>" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="phone">手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" id="phone" placeholder="请输入手机号" autocomplete="off"
+                       value="<%= userinfo.phone %>" class="layui-input">
+            </div>
+        </div>
+        <% if(loginInfo.power == 1){ %>
+        <div class="layui-form-item power">
+            <label class="layui-form-label" for="power">权限</label>
+            <div class="layui-input-block">
+                <select name="power" id="power" lay-filter="power">
+                    <option value="2">商家</option>
+                </select>
+            </div>
+        </div>
+            <div class="layui-form-item dep">
+                <label class="layui-form-label" for="shop_id">店铺</label>
+                <div class="layui-input-block">
+                    <select name="shop_id" id="shop_id">
+
+                    </select>
+                </div>
+            </div>
+        <% } %>
+        <% if(type == "info"){ %>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限</label>
+                <div class="layui-input-block">
+                    <% if(userinfo.power == 1){ %>
+                        <input type="text" disabled value="管理员" class="layui-input">
+                    <% }else if(userinfo.power == 2){ %>
+                        <input type="text" disabled value="商家" class="layui-input">
+                    <% } %>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">店铺</label>
+                <div class="layui-input-block">
+                    <input type="text" disabled value="<%= userinfo.dname?userinfo.dname:'无店铺' %>"
+                           class="layui-input">
+                </div>
+            </div>
+        <% } %>
+        <div class="layui-form-item business">
+            <label class="layui-form-label" for="business_license"><span class="x-red">*</span>经营许可证</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="business_license" id="business_license" value="<%= userinfo.business_license %>"
+                       class="layui-input">
+                <button type="button" id="uploadLicense" class="layui-btn">上传经营许可证</button>
+                <div class="image-group">
+                    <div class="image-div" id="licenseImage">
+                        <div class="image">
+                            <img src="" alt="">
+                        </div>
+                        <div class="opt">
+                            <i class="iconfont delete">&#xe69d;</i>
+                            <i class="iconfont show" type="licenseImage">&#xe6ac;</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="avatar">头像</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="avatar" id="avatar" value="<%= userinfo.avatar %>" class="layui-input">
+                <button type="button" id="uploadAvatar" class="layui-btn">上传头像</button>
+                <div class="image-group">
+                    <div class="image-div" id="avatarImage">
+                        <div class="image">
+                            <img src="" alt="">
+                        </div>
+                        <div class="opt">
+                            <i class="iconfont delete">&#xe69d;</i>
+                            <i class="iconfont show">&#xe6ac;</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% if(loginInfo.id != userinfo.id){ %>
+        <div class="layui-form-item">
+            <label class="layui-form-label" for="status">状态</label>
+            <div class="layui-input-block">
+                <select name="status" id="status">
+                    <option value="1">可用</option>
+                    <option value="2">禁用</option>
+                </select>
+            </div>
+        </div>
+        <% } %>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-submit lay-filter="submitBtn">提交</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+<script>
+
+
+    layui.use(["form", "upload"], function () {
+        const {form, upload} = layui;
+
+        /*获取状态值*/
+        let status = "<%= userinfo.status %>";
+        let power = "<%= userinfo.power %>";
+
+        /*更新修改时下拉框的值*/
+        if (status) {
+            $("#status").val(status);
+            $("#power").val(power);
+            $("#username").prop("readonly", true);
+            /*在layui中通过js更新select的值后，必须调用form.render去重新渲染*/
+            form.render();
+            $(".image-div").show();
+            let avatar = $("#avatar").val();
+            $("#avatarImage").find("img").prop("src", "upload/" + avatar);
+            let business_license = $("#business_license").val();
+            $("#licenseImage").find("img").prop("src", "upload/" + business_license);
+        } else {
+            $(".image-div").hide();
+        }
+        $(".opt").hide();
+        /*设置初始表单*/
+        if (power == 1) {
+            $(".power").hide();
+            $(".dep").hide();
+            $(".business").hide();
+        } else if ($("#power").val() == 2) {
+            $(".dep").show();
+            $(".business").show();
+            $("#business_license").attr("lay-verify", "required");
+        }
+        /*动态切换表单*/
+        form.on('select(power)', function (data) {
+            if (data.value == 2) {
+                $(".dep").hide();
+                $(".business").show();
+                $(".power").show();
+                $("#business_license").attr("lay-verify", "required");
+            } else {
+                $(".dep").show();
+                $(".business").hide();
+                $(".power").show();
+                $("#business_license").removeAttr("lay-verify");
+            }
+        });
+
+        /*初始化图片操作层*/
+
+        /*控制图片操作层*/
+        $(".image-div").mouseenter(function () {
+            $(this).find(".opt").show();
+        }).mouseleave(function () {
+            $(this).find(".opt").hide();
+        });
+        /*绑定预览图片的事件*/
+        $(".show").click(function () {
+            let src = $(this).parents(".image-group").find("img").prop("src");
+            console.log(src)
+            layer.open({
+                type: 1,
+                title: "图片预览",
+                content: '<img style="display: block;height: 100%;width: 100%;" src="' + src + '">',
+                area: ["500px", "500px"]
+            });
+        })
+        /*绑定删除图片的事件*/
+        $(".delete").click(function () {
+            layer.confirm("确定删除该图片吗？", {icon: 3}, index => {
+                $(this).parents(".image-group").find(".image-div").hide().find("img").prop("src", "");
+                $(this).parents(".layui-input-block").find("input").val("");
+                layer.close(index);
+            });
+        });
+
+        /*渲染驾照上传组件*/
+        upload.render({
+            elem: "#uploadLicense",
+            url: "/upload",
+            accept: "images",/*限制类型*/
+            acceptMime: "images",/*限制选择框*/
+            exts: "png|jpg|jpeg|gif",/*支持的后缀*/
+            done(res) {
+                if (res.code === 200) {
+                    $("#licenseImage").show().find("img").prop("src", "upload/" + res.data);
+                    $("#business_license").val(res.data)
+                } else {
+                    layer.error("上传失败！");
+                }
+            }
+        });
+        /*渲染头像上传组件*/
+        upload.render({
+            elem: "#uploadAvatar",
+            url: "/upload",
+            accept: "images",/*限制类型*/
+            acceptMime: "images",/*限制选择框*/
+            exts: "png|jpg|jpeg|gif",/*支持的后缀*/
+            done(res) {
+                if (res.code === 200) {
+                    $("#avatarImage").show().find("img").prop("src", "upload/" + res.data);
+                    $("#avatar").val(res.data)
+                } else {
+                    layer.error("上传失败！");
+                }
+            }
+        });
+        /*获取店铺列表*/
+        $.ajax({
+            url: "shop/select",
+            method: "get",
+            dataType: "json",
+            success(res) {
+                if (res.code === 200) {
+                    const dList = res.data;
+                    const $dep = $("#shop_id");
+                    let $html = "";
+                    for (const d of dList) {
+                        if (d.status === 2) {
+                            $html += '<option disabled value="' + d.id + '">' + d.name + '</option>';
+                        } else {
+                            $html += '<option value="' + d.id + '">' + d.name + '</option>';
+                        }
+                    }
+                    $dep.append($html);
+                    let shop_id = "<%= userinfo.shop_id %>";
+                    if (shop_id) {
+                        $("#shop_id").val(shop_id);
+                    }
+                    form.render();
+                }
+            }
+        });
+        /*监听提交*/
+
+        form.on("submit(submitBtn)", function ({field}) {
+            let url = "";
+            if (field.id) {
+                url = "userinfo/update";
+            } else {
+                url = "userinfo/save";
+            }
+            // if (field.power != 2) {
+            //     /*非商家权限时清除许可证*/
+            //     field.business_license = null
+            // } else {
+            //     field.shop_id = null
+            // }
+
+            $.ajax({
+                url,
+                data: field,
+                method: "post",
+                dataType: "json",
+                success(res) {
+                    if (res.code === 200) {
+                        layer.msg((field.id ? "修改" : "添加") + "成功", {icon: 6}, function () {
+                            const index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+                            parent.table.reload("dataList")
+                        });
+                    } else {
+                        layer.alert(res.msg, {icon: 5});
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</html>

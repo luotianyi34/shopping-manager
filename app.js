@@ -1,13 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+/*引入session模块*/
+const session=require('express-session');
 
-var app = express();
+const indexRouter = require('./routes/index');
+const userinfoRouter = require('./routes/userinfo')
+const uploadRouter = require('./routes/upload');
+const shopRouter = require('./routes/shop')
+
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +25,46 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/*配置session*/
+app.use(session({
+  secret: "keyboard cat",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 1000 * 60 * 30
+  }
+}));
+app.all("/*", function (req, res, next) {
+  if (req.session.loginInfo) {
+    next();
+  } else {
+    const urlList = ["/", "/login", "/nologin"];
+    let isGo = false;
+    for (let i = 0; i < urlList.length; i++) {
+      if (urlList[i] === req.url) {
+        isGo = true
+        break;
+      }
+    }
+    if (isGo) {
+      next();
+    } else {
+      res.redirect("/nologin");//未登录且非白名单则自动重定向到登录页
+
+
+      // res.writeHead(200, {"Content-Type": "text/html"});
+      // res.write(`<script>top.location.replace("/nologin")</script>`);
+      // res.end();
+    }
+
+  }
+})
+
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/userinfo', userinfoRouter);
+app.use('/upload', uploadRouter);
+app.use('/shop',shopRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

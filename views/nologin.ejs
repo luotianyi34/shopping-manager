@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>未登录</title>
+	<script src="x-admin/lib/layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+</body>
+<script>
+	layui.use(['layer'], function () {
+		layer.alert("登录失效，请重新登录！", function () {
+			top.location.replace("/");
+		})
+	})
+</script>
+</html>
