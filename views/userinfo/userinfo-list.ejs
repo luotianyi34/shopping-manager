@@ -127,7 +127,7 @@
             success(res) {
                 if (res.code === 200) {
                     const dList = res.data;
-                    const $firstOption = $("#department_id option:first");
+                    const $firstOption = $("#shop_id option:first");
                     let $html = "";
                     for (const d of dList) {
                         $html += '<option value="' + d.id + '">' + d.name + '</option>';
