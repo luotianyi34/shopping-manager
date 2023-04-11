@@ -74,21 +74,25 @@
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>店铺信息</cite></a>
                             </li>
-
+                            <li>
+                                <a onclick="xadmin.add_tab('客户信息','',true)">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>客户信息</cite></a>
+                            </li>
                         </ul>
                     </li>
             <% } %>
             <% if(loginInfo.power == 1){ %>
                 <li>
                     <a href="javascript:;">
-                        <i class="iconfont left-nav-li" lay-tips="车辆管理">&#xe6e3;</i>
-                        <cite>车辆管理</cite>
+                        <i class="iconfont left-nav-li" lay-tips="商品管理">&#xe722;</i>
+                        <cite>商品管理</cite>
                         <i class="iconfont nav_right">&#xe697;</i></a>
                     <ul class="sub-menu">
                         <li>
-                            <a onclick="xadmin.add_tab('车辆信息','',true)">
+                            <a onclick="xadmin.add_tab('商品信息','item/list',true)">
                                 <i class="iconfont">&#xe6a7;</i>
-                                <cite>车辆信息</cite></a>
+                                <cite>商品信息</cite></a>
                         </li>
                         <li>
                             <a onclick="xadmin.add_tab('品牌信息','',true)">

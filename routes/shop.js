@@ -11,7 +11,6 @@ router.get("/page",function (req, res) {
     const {loginInfo} = req.session;
     const params = [];
     let sql = "select s.* from shop s left join (select shop_id from userinfo group by shop_id) u on s.id =u.shop_id where 1 = 1 ";
-
     if(query.name){
         countSql += "and name = ? ";
         countParams.push(query.name);
