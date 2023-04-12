@@ -10,7 +10,7 @@ router.get("/list", function (req, res) {
 router.get("/page", function (req, res) {
     const {query} = req;
     const {loginInfo} = req.session;
-    let sql = "select u.*,d.name dname from userinfo u left join shop d on u.shop_id = d.id where 1 = 1 ";
+    let sql = "select u.*,s.name dname from userinfo u left join shop s on u.shop_id = s.id where 1 = 1 ";
     const params = [];
     sql = setSqlParams(query, sql, params, loginInfo);
     sql += " order by u.id desc limit ?,?";
@@ -18,7 +18,7 @@ router.get("/page", function (req, res) {
     params.push(parseInt(query.limit));
     connection.query(sql, params, function (e, userList) {
         if (e) throw e;
-        let countSql = "select count(u.id) count from userinfo u left join shop d on u.shop_id = d.id where 1 = 1 ";
+        let countSql = "select count(u.id) count from userinfo u left join shop s on u.shop_id = s.id where 1 = 1 ";
         const countParams = [];
         countSql = setSqlParams(query, countSql, countParams, loginInfo);
         connection.query(countSql, countParams, function (e, r) {

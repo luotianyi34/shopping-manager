@@ -65,7 +65,7 @@
 <body>
 <div style="width: 90%;margin: 0 30px 0 auto">
     <form id="edit" lay-filter="edit" class="layui-form">
-        <input type="hidden" name="id" id="id" value="<%= item.s_id %>">
+        <input type="hidden" name="id" id="id" value="<%= item.id %>">
         <div class="layui-form-item">
             <label class="layui-form-label" for="name"><span class="x-red">*</span>商品名称</label>
             <div class="layui-input-block">
@@ -94,20 +94,13 @@
                        value="<%= item.profile %>" class="layui-input">
             </div>
         </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">店铺</label>
-                <div class="layui-input-block">
-                    <input type="text" disabled value="<%= item.sname?item.sname:'无店铺' %>"
-                           class="layui-input">
-                </div>
-            </div>
         <div class="layui-form-item">
             <label class="layui-form-label" for="picture">头像</label>
             <div class="layui-input-block">
                 <input type="hidden" name="picture" id="picture" value="<%= item.picture %>" class="layui-input">
                 <button type="button" id="uploadAvatar" class="layui-btn">上传商品预览图</button>
                 <div class="image-group">
-                    <div class="image-div" id="avatarImage">
+                    <div class="image-div" id="pictureImage">
                         <div class="image">
                             <img src="" alt="">
                         </div>
@@ -134,8 +127,6 @@
 
     layui.use(["form", "upload"], function () {
         const {form, upload} = layui;
-
-
         /*控制图片操作层*/
         $(".image-div").mouseenter(function () {
             $(this).find(".opt").show();
@@ -171,46 +162,18 @@
             exts: "png|jpg|jpeg|gif",/*支持的后缀*/
             done(res) {
                 if (res.code === 200) {
-                    $("#avatarImage").show().find("img").prop("src", "upload/" + res.data);
-                    $("#avatar").val(res.data)
+                    $("#pictureImage").show().find("img").prop("src", "upload/" + res.data);
+                    $("#picture").val(res.data)
                 } else {
                     layer.error("上传失败！");
-                }
-            }
-        });
-        /*获取店铺列表*/
-        $.ajax({
-            url: "item/select",
-            method: "get",
-            dataType: "json",
-            success(res) {
-                if (res.code === 200) {
-                    const itemList = res.data;
-                    const $dep = $("#s_id");
-                    let $html = "";
-                    for (const s of itemList) {
-                            $html += '<option value="' + s.id + '">' + s.name + '</option>';
-                    }
-                    $dep.append($html);
-                    let s_id = "<%= item.s_id %>";
-                    if (s_id) {
-                        $("#s_id").val(s_id);
-                    }
-                    form.render();
                 }
             }
         });
         /*监听提交*/
 
         form.on("submit(submitBtn)", function ({field}) {
-            let url = "";
-            if (field.id) {
-                url = "item/update";
-            } else {
-                url = "item/save";
-            }
             $.ajax({
-                url,
+                url:"item/update",
                 data: field,
                 method: "post",
                 dataType: "json",

@@ -12,12 +12,12 @@ router.get("/page",function (req, res) {
     const params = [];
     let sql = "select s.* from shop s left join (select shop_id from userinfo group by shop_id) u on s.id =u.shop_id where 1 = 1 ";
     if(query.name){
-        countSql += "and name = ? ";
-        countParams.push(query.name);
+        sql += "and name = ? ";
+        params.push(query.name);
     }
     if(query.status){
-        countSql+= "and status = ? ";
-        countParams.push(query.status);
+        sql+= "and status = ? ";
+        params.push(query.status);
     }
     if (loginInfo.power === 2) {
         sql += "and u.shop_id = ? ";
@@ -40,16 +40,16 @@ router.get("/page",function (req, res) {
             countParams.push(query.name);
         }
         if(query.status){
-            countSql+= "and status = ? ";
+            countSql+= "and s.status = ? ";
             countParams.push(query.status);
         }
         if (loginInfo.power === 2) {
-            sql += "and u.shop_id = ? ";
-            params.push(loginInfo.shop_id);
+            countSql += "and u.shop_id = ? ";
+            countParams.push(loginInfo.shop_id);
         } else {
             if (query.shop_id) {
-                sql += "and u.shop_id = ? ";
-                params.push(query.shop_id);
+                countSql += "and u.shop_id = ? ";
+                countParams.push(query.shop_id);
             }
         }
         connection.query(countSql, countParams, function (e, r) {
@@ -117,7 +117,7 @@ router.post("/update", function (req, res) {
 
 router.get("/select", function (req, res) {
     const {query} = req;
-    let sql = "select * from shop where 1 = 1 ";
+    let sql = "select * from shop s where 1 = 1 ";
     const params = [];
     if (query.status) {
         sql += "where status = ? ";

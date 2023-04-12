@@ -17,6 +17,14 @@
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+<style>
+    .layui-table-cell {
+        height: 100px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 <body>
 <div class="x-nav">
           <span class="layui-breadcrumb">
@@ -35,10 +43,6 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
-                        <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="id" placeholder="商品号" autocomplete="off"
-                                   class="layui-input">
-                        </div>
                         <div class="layui-inline layui-show-xs-block">
                             <input type="text" name="name" placeholder="名称" autocomplete="off"
                                    class="layui-input">
@@ -60,7 +64,7 @@
 <script type="text/html" id="toolbar">
     <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="add">添加</button>
 </script>
-<script type="text/html" id="avatarTemp">
+<script type="text/html" id="pictureTemp">
     <div id="picture_{{d.id}}" style="height: 80px;width: 80px;border-radius: 50%;overflow: hidden;">
         <img src="upload/{{d.picture}}" layer-src="upload/{{d.picture}}" alt=""
              style="height: 100%;width: 100%;display: block">
@@ -78,6 +82,25 @@
         table = layui.table;
         const form = layui.form;
 
+        /*获取店铺列表*/
+        $.ajax({
+            url: "item/select",
+            method: "get",
+            dataType: "json",
+            success(res) {
+                if (res.code === 200) {
+                    const iList = res.data;
+                    const $firstOption = $("#s_id option:first");
+                    let $html = "";
+                    for (const i of iList) {
+                        $html += '<option value="' + i.id + '">' + i.name + '</option>';
+                    }
+                    $firstOption.after($html);
+                    form.render();
+                }
+            }
+        });
+
         table.render({
             elem: "#dataList",
             url: "item/page",
@@ -87,13 +110,21 @@
                 {title: "商品价格", field: "price"},
                 {title: "商品库存", field: "stock"},
                 {title: "商品介绍", field: "profile"},
-                {title: "头像", field: "avatar", templet: "#avatarTemp"},
+                {title: "头像", field: "picture", templet: "#pictureTemp"},
                 {title: "操作", fixed: "right", templet: "#optTemp"},
             ]],
             toolbar:"#toolbar",
             page:true,
             limit:5,
-            limits:[5,10,20,50,100]
+            limits:[5,10,20,50,100],
+            done({data}) {
+                for (let user of data) {
+                    layer.photos({
+                        photos: "#picture_" + user.id
+                    })
+                }
+
+            }
         });
 
         table.on("tool(dataList)", function (obj) {
@@ -123,6 +154,7 @@
                 xadmin.open("添加商品", "item/edit", 600, 600)
             }
         });
+
         form.on("submit(search)", function (data) {
             table.reload("dataList", {
                 where: data.field,
@@ -132,6 +164,7 @@
             })
             return false;
         });
+
     });
 </script>
 </html>

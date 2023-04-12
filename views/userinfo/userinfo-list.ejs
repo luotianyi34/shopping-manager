@@ -121,7 +121,7 @@
         const form = layui.form;
         /*获取部门列表*/
         $.ajax({
-            url: "shop/select",
+            url: "userinfo/select",
             method: "get",
             dataType: "json",
             success(res) {
@@ -137,6 +137,7 @@
                 }
             }
         });
+
         table.render({
             elem: "#dataList",
             url: "userinfo/page",
