@@ -54,13 +54,6 @@
                         <div class="layui-inline layui-show-xs-block">
                             <input type="text" name="phone" placeholder="手机号" autocomplete="off" class="layui-input">
                         </div>
-                        <% if(loginInfo.power == 1){ %>
-<!--                            <div class="layui-inline layui-show-xs-block">-->
-<!--                                <select lay-search name="shop_id" id="shop_id">-->
-<!--                                    <option value="">[选择店铺]</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-                        <% } %>
                         <div class="layui-inline layui-show-xs-block">
                             <select name="power" id="power">
                                 <option value="">[选择权限]</option>
@@ -68,8 +61,6 @@
                                     <option value="1">管理员</option>
                                     <option value="2">商家</option>
                                 <% } %>
-<!--                                <option value="2">负责人</option>-->
-<!--                                <option value="3">员工</option>-->
                             </select>
                         </div>
                         <div class="layui-inline layui-show-xs-block">
@@ -154,10 +145,6 @@
                                 return "管理员";
                             case 2:
                                 return "商家";
-                            // case 3:
-                            //     return "员工";
-                            // case 4:
-                            //     return "司机";
                             default:
                                 return "权限异常";
                         }

@@ -33,7 +33,7 @@ router.get("/page",function (req, res) {
     params.push(parseInt(query.limit));
     connection.query(sql, params, function (e, shopList) {
         if (e) throw e;
-        let countSql = "select count(s.id) count from shop s left join userinfo u on u.shop_id = s.id ";
+        let countSql = "select count(s.id) count from shop s left join (select shop_id from userinfo group by shop_id) u on u.shop_id = s.id ";
         const countParams = [];
         if(query.name){
             countSql += "and name = ? ";
@@ -42,15 +42,6 @@ router.get("/page",function (req, res) {
         if(query.status){
             countSql+= "and s.status = ? ";
             countParams.push(query.status);
-        }
-        if (loginInfo.power === 2) {
-            countSql += "and u.shop_id = ? ";
-            countParams.push(loginInfo.shop_id);
-        } else {
-            if (query.shop_id) {
-                countSql += "and u.shop_id = ? ";
-                countParams.push(query.shop_id);
-            }
         }
         connection.query(countSql, countParams, function (e, r) {
             if (e) throw e;

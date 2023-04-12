@@ -26,7 +26,7 @@ router.get("/page",function (req, res) {
     params.push(parseInt(query.limit));
     connection.query(sql, params, function (e, itemList) {
         if (e) throw e;
-        let countSql = "select count(i.id) count from item i left join (select shop_id from userinfo group by shop_id) u on u.shop_id = i.s_id " ;
+        let countSql = "select count(i.id) count from item i left join (select shop_id from userinfo group by shop_id) u on u.shop_id = i.s_id where 1 = 1 " ;
         const countParams = [];
         if(query.name){
             countSql += "and name = ? ";
@@ -81,7 +81,7 @@ router.post("/update", function (req, res) {
     const {body} = req;
     const {loginInfo} = req.session;
     if(body.id) {
-        let sql = "update item set name = ?,price = ?,stock=?,s_id=?,profile=?,picture=? where id=?";
+        let sql = "update item set name = ?,price = ?,stock=?,s_id=?,profile=?,picture=? where id=? ";
         const params = [body.name, body.price, body.stock,body.s_id, body.profile, body.picture,body.id];
         connection.query(sql, params, function (e, r) {
             if (e) throw e;
