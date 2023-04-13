@@ -24,7 +24,7 @@ router.get("/page",function (req, res) {
     sql += " order by i.id limit ?,?";
     params.push((query.page - 1) * query.limit);
     params.push(parseInt(query.limit));
-    connection.query(sql, params, function (e, itemList) {
+    connection.query(sql, params, function (e, dataList) {
         if (e) throw e;
         let countSql = "select count(i.id) count from item i left join (select shop_id from userinfo group by shop_id) u on u.shop_id = i.s_id where 1 = 1 " ;
         const countParams = [];
@@ -38,7 +38,7 @@ router.get("/page",function (req, res) {
         }
         connection.query(countSql, countParams, function (e, r) {
             if (e) throw e;
-            res.send(result.page(itemList, r[0].count));
+            res.send(result.page(dataList, r[0].count));
         });
     });
 })
@@ -82,7 +82,7 @@ router.post("/update", function (req, res) {
     const {loginInfo} = req.session;
     if(body.id) {
         let sql = "update item set name = ?,price = ?,stock=?,s_id=?,profile=?,picture=? where id=? ";
-        const params = [body.name, body.price, body.stock,body.s_id, body.profile, body.picture,body.id];
+        const params = [body.name, body.price, body.stock, loginInfo.shop_id, body.profile, body.picture,body.id];
         connection.query(sql, params, function (e, r) {
             if (e) throw e;
             if (r.affectedRows === 1) {
@@ -93,7 +93,7 @@ router.post("/update", function (req, res) {
         });
     }else{
 
-        let sql = "INSERT INTO item values (null,?,?,?,?,?,?)"
+        let sql = "INSERT INTO item values (null,?,?,?,?,?,?) "
         const params = [body.name, body.price, body.stock, loginInfo.shop_id , body.profile, body.picture];
         connection.query(sql, params, function (e, r) {
             if (e) throw e;

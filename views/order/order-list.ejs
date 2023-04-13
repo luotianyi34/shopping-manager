@@ -58,7 +58,7 @@
                                         <option value="5">已作废</option></select>
                                 </div>
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="order_time" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
+                                    <input type="text" name="order_name" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <button class="layui-btn" lay-submit="" lay-filter="sreach">
                                         <i class="layui-icon">&#xe615;</i></button>
@@ -141,6 +141,7 @@
                         }
                     },
                     {title: "订单创建时间", field: "order_time"},
+                    {title:"订单修改时间",field: "order_flush_time"},
                     {title: "操作", fixed: "right", templet: "#optTemp"}
                 ]],
                 toolbar: "#toolbar",
@@ -149,6 +150,34 @@
                 limits: [5, 10, 20, 50, 100],
             });
 
+            table.on("tool(dataList)", function (obj) {
+                const {data: {id}, event} = obj;
+                if (event === "delete") {
+                    layer.confirm("确定删除编号[" + id + "]的数据吗?", {icon: 3}, function (index) {
+                        $.ajax({
+                            url: "order/delete/" + id,
+                            method: "delete",
+                            success(res) {
+                                if (res.code === 200) {
+                                    layer.msg("删除成功!", {icon: 6});
+                                    table.reload("dataList")
+                                } else {
+                                    layer.alert(res.msg)
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    })
+                } else {
+                    xadmin.open("修改用户", "order/edit?id=" + id, 600, 600)
+                }
+            });
+
+            table.on("toolbar(dataList)", function (obj) {
+                if (obj.event === "add") {
+                    xadmin.open("添加用户", "order/edit", 600, 600)
+                }
+            });
 
             form.on("submit(search)", function (data) {
                 table.reload("dataList", {

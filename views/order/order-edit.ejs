@@ -20,51 +20,50 @@
 <body>
 <div style="width: 90%;margin: 0 30px 0 auto">
     <form id="edit" lay-filter="edit" class="layui-form">
-        <input type="hidden" name="id" id="id" value="<%= item.id %>">
+        <input type="hidden" name="id" id="id" value="<%= order.id %>">
         <div class="layui-form-item">
-            <label class="layui-form-label" for="name"><span class="x-red">*</span>商品名称</label>
+            <label class="layui-form-label" for="order_name"><span class="x-red">*</span>订单号</label>
             <div class="layui-input-block">
-                <input type="text" name="name" id="name" placeholder="请输入商品名称" autocomplete="off"
-                       value="<%= item.name %>" lay-verify="required" class="layui-input">
+                <input type="text" name="order_name" id="order_name" placeholder="请输入订单号" autocomplete="off" value="<%=order.order_name %>" lay-verify="required" class="layui-input" <% if(order.order_name){ %>readonly<% } %>>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="price"><span class="x-red">*</span>商品价格</label>
+            <label class="layui-form-label" for="total"><span class="x-red"></span>总价</label>
             <div class="layui-input-block">
-                <input type="text" name="price" id="price" placeholder="请输入商品价格" autocomplete="off"
-                       value="<%= item.price %>" lay-verify="required" class="layui-input">
+                <input type="text" name="total" id="total" placeholder="总价" autocomplete="off"
+                       value="<%= order.total %>" lay-verify="required" class="layui-input" <% if(order.total){ %>readonly<% } %>>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="stock"><span class="x-red"></span>商品库存</label>
+            <label class="layui-form-label" for="way">支付方式</label>
             <div class="layui-input-block">
-                <input type="text" name="stock" id="stock" placeholder="请输入商品库存" autocomplete="off"
-                       value="<%= item.stock %>" class="layui-input">
+                <select name="way" id="way">
+                    <option value="1">支付宝</option>
+                    <option value="2">微信</option>
+                    <option value="3">货到付款</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="profile">商品介绍</label>
+            <label class="layui-form-label" for="post">运输方式</label>
             <div class="layui-input-block">
-                <input type="text" name="profile" id="profile" placeholder="请输入商品介绍" autocomplete="off"
-                       value="<%= item.profile %>" class="layui-input">
+                <select name="post" id="post">
+                    <option value="1">顺丰</option>
+                    <option value="2">申通</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="picture">头像</label>
+            <label class="layui-form-label" for="controller">订单状态</label>
             <div class="layui-input-block">
-                <input type="hidden" name="picture" id="picture" value="<%= item.picture %>" class="layui-input">
-                <button type="button" id="uploadAvatar" class="layui-btn">上传商品预览图</button>
-                <div class="image-group">
-                    <div class="image-div" id="pictureImage">
-                        <div class="image">
-                            <img src="" alt="">
-                        </div>
-                        <div class="opt">
-                            <i class="iconfont delete">&#xe69d;</i>
-                            <i class="iconfont show">&#xe6ac;</i>
-                        </div>
-                    </div>
-                </div>
+                <select name="controller" id="controller">
+                    <option value="0">待确认</option>
+                    <option value="1">已确认</option>
+                    <option value="2">已收货</option>
+                    <option value="3">已取消</option>
+                    <option value="4">已完成</option>
+                    <option value="5">已作废</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -80,55 +79,12 @@
 <script>
 
 
-    layui.use(["form", "upload"], function () {
-        const {form, upload} = layui;
-        /*控制图片操作层*/
-        $(".image-div").mouseenter(function () {
-            $(this).find(".opt").show();
-        }).mouseleave(function () {
-            $(this).find(".opt").hide();
-        });
-        /*绑定预览图片的事件*/
-        $(".show").click(function () {
-            let src = $(this).parents(".image-group").find("img").prop("src");
-            console.log(src)
-            layer.open({
-                type: 1,
-                title: "图片预览",
-                content: '<img style="display: block;height: 100%;width: 100%;" src="' + src + '">',
-                area: ["500px", "500px"]
-            });
-        })
-        /*绑定删除图片的事件*/
-        $(".delete").click(function () {
-            layer.confirm("确定删除该图片吗？", {icon: 3}, index => {
-                $(this).parents(".image-group").find(".image-div").hide().find("img").prop("src", "");
-                $(this).parents(".layui-input-block").find("input").val("");
-                layer.close(index);
-            });
-        });
-
-        /*渲染头像上传组件*/
-        upload.render({
-            elem: "#uploadAvatar",
-            url: "/upload",
-            accept: "images",/*限制类型*/
-            acceptMime: "images",/*限制选择框*/
-            exts: "png|jpg|jpeg|gif",/*支持的后缀*/
-            done(res) {
-                if (res.code === 200) {
-                    $("#pictureImage").show().find("img").prop("src", "upload/" + res.data);
-                    $("#picture").val(res.data)
-                } else {
-                    layer.error("上传失败！");
-                }
-            }
-        });
-        /*监听提交*/
+    layui.use(["form"], function () {
+        const {form} = layui;
 
         form.on("submit(submitBtn)", function ({field}) {
             $.ajax({
-                url:"item/update",
+                url:"order/update",
                 data: field,
                 method: "post",
                 dataType: "json",

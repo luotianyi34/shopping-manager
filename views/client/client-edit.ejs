@@ -20,26 +20,26 @@
 <body>
 <div style="width: 90%;margin: 0 30px 0 auto">
   <form id="edit" lay-filter="edit" class="layui-form">
-    <input type="hidden" name="id" id="id" value="<%= "client".id %>">
+    <input type="hidden" name="id" id="id" value="<%= client.id %>">
     <div class="layui-form-item">
       <label class="layui-form-label" for="name"><span class="x-red">*</span>姓名</label>
       <div class="layui-input-block">
         <input type="text" name="name" id="name" placeholder="请输入姓名" autocomplete="off"
-               value="<%= "client".name %>" lay-verify="required" class="layui-input">
+               value="<%= client.name %>" lay-verify="required" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="tel"><span class="x-red"></span>电话</label>
+      <div class="layui-input-block">
+        <input type="text" name="tel" id="tel" placeholder="请输入电话" autocomplete="off"
+               value="<%= client.tel %>" class="layui-input">
       </div>
     </div>
     <div class="layui-form-item">
       <label class="layui-form-label" for="address">地址</label>
       <div class="layui-input-block">
         <textarea placeholder="请输入地址" id="address" name="address"
-                  class="layui-textarea"><%= "client".address %></textarea>
-      </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label" for="tel">电话</label>
-      <div class="layui-input-block">
-        <textarea placeholder="请输入电话" id="tel" name="tel"
-                  class="layui-textarea"><%= "client".tel %></textarea>
+                  class="layui-textarea"><%= client.address %></textarea>
       </div>
     </div>
     <div class="layui-form-item">
@@ -64,6 +64,7 @@
 
   layui.use(["form"], function () {
     const form = layui.form;
+
 
     form.on("submit(submitBtn)", function ({field}) {
       $.ajax({

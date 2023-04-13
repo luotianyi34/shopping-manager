@@ -9,10 +9,10 @@ router.get("/list", function (req, res) {
 
 router.get("/page", function (req, res) {
     const {query} = req;
-    let sql = "select c.* from client c where 1 = 1 ";
+    let sql = "select * from client where 1 = 1 ";
     const params = [];
     sql = setSqlParams(query, sql, params);
-    sql += " order by c.id limit ?,? ";
+    sql += " order by id limit ?,? ";
     params.push((query.page - 1) * query.limit);
     params.push(parseInt(query.limit));
     connection.query(sql, params, function (e, dataList) {
@@ -39,10 +39,10 @@ router.get("/edit", function (req, res) {
     if (query.id) {
         connection.query("select * from client where id = ?", query.id, function (e, r) {
             if (e) throw e;
-            res.render("client/client-edit", {shop: r[0]})
+            res.render("client/client-edit", {client: r[0], loginInfo: req.session.loginInfo, type: query.type})
         })
     } else {
-        res.render("client/client-edit", {shop: {}})
+        res.render("client/client-edit", {client: {}, loginInfo: req.session.loginInfo, type: query.type})
     }
 })
 router.post("/update", function (req, res) {

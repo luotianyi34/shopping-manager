@@ -95,7 +95,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" for="picture">头像</label>
+            <label class="layui-form-label" for="picture">商品预览图</label>
             <div class="layui-input-block">
                 <input type="hidden" name="picture" id="picture" value="<%= item.picture %>" class="layui-input">
                 <button type="button" id="uploadAvatar" class="layui-btn">上传商品预览图</button>
@@ -126,7 +126,15 @@
 
 
     layui.use(["form", "upload"], function () {
+
         const {form, upload} = layui;
+
+            /*在layui中通过js更新select的值后，必须调用form.render去重新渲染*/
+            form.render();
+            $(".image-div").show();
+            let picture = $("#picture").val();
+            $("#pictureImage").find("img").prop("src", "upload/" + picture);
+
         /*控制图片操作层*/
         $(".image-div").mouseenter(function () {
             $(this).find(".opt").show();
