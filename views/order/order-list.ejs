@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <title>商城订单后台管理系统</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="stylesheet" href="x-admin/css/font.css">
+    <link rel="stylesheet" href="x-admin/css/xadmin.css">
+    <link rel="stylesheet" href="x-admin/css/theme2.css">
+    <script type="text/javascript" src="x-admin/js/jquery.min.js"></script>
+    <script src="x-admin/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="x-admin/js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+    
+    <body>
+        <div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="order/list">商铺管理</a>
+                <a href="order/list">订单信息</a>
+                <a>
+                    <cite>订单列表</cite></a>
+            </span>
+            <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+                <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+            </a>
+        </div>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <form class="layui-form layui-col-space5">
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <select name="way" id="way">
+                                        <option value="">支付方式</option>
+                                        <option value="1">支付宝</option>
+                                        <option value="2">微信</option>
+                                        <option value="3">货到付款</option></select>
+                                </div>
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <select name="controller" id="controller">
+                                        <option value="">订单状态</option>
+                                        <option value="0">待确认</option>
+                                        <option value="1">已确认</option>
+                                        <option value="2">已收货</option>
+                                        <option value="3">已取消</option>
+                                        <option value="4">已完成</option>
+                                        <option value="5">已作废</option></select>
+                                </div>
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <input type="text" name="order_time" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
+                                <div class="layui-input-inline layui-show-xs-block">
+                                    <button class="layui-btn" lay-submit="" lay-filter="sreach">
+                                        <i class="layui-icon">&#xe615;</i></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="layui-card-body layui-table-body layui-table-main">
+                            <table id="dataList" lay-filter="dataList"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+<script type="text/html" id="toolbar">
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="add">添加</button>
+</script>
+<script type="text/html" id="optTemp">
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" lay-event="update">修改</button>
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" lay-event="delete">删除</button>
+</script>
+    <script>
+        var table;
+        layui.use([ 'table','form'],function () {
+            table = layui.table;
+            const form = layui.form;
+
+            table.render({
+                elem: "#dataList",
+                url: "order/page",
+                cols: [[
+                    {title: "编号", field: "id"},
+                    {title: "订单号", field: "order_name"},
+                    {title: "所在商铺", field: "sname"},
+                    {title: "总价", field: "total"},
+                    {
+                        title: "支付方式", field: "way", templet: function (d) {
+                            switch (d.way) {
+                                case 1:
+                                    return "支付宝";
+                                case 2:
+                                    return "微信";
+                                case 3:
+                                    return "货到付款";
+                                default:
+                                    return "支付状态异常";
+                            }
+                        }
+                    },
+                    {
+                        title: "订单状态", field: "controller", templet: function (d) {
+                            switch (d.controller) {
+                                case 0:
+                                    return "待确认";
+                                case 1:
+                                    return "已确认";
+                                case 2:
+                                    return "已收货";
+                                case 3:
+                                    return "已取消";
+                                case 4:
+                                    return "已完成";
+                                case 5:
+                                    return "已作废";
+                                default:
+                                    return "订单状态异常";
+                            }
+                        }
+                    },
+                    {
+                        title: "运输方式", field: "post", templet: function (d) {
+                            switch (d.post) {
+                                case 1:
+                                    return "顺丰";
+                                case 2:
+                                    return "申通";
+                                default:
+                                    return "运输状态异常";
+                            }
+                        }
+                    },
+                    {title: "订单创建时间", field: "order_time"},
+                    {title: "操作", fixed: "right", templet: "#optTemp"}
+                ]],
+                toolbar: "#toolbar",
+                page: true,
+                limit: 5,
+                limits: [5, 10, 20, 50, 100],
+            });
+
+
+            form.on("submit(search)", function (data) {
+                table.reload("dataList", {
+                    where: data.field,
+                    page: {
+                        curr: 1
+                    }
+                })
+                return false;
+            });
+        })
+
+    </script>
+</html>

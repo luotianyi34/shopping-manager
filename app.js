@@ -13,6 +13,7 @@ const uploadRouter = require('./routes/upload');
 const shopRouter = require('./routes/shop')
 const itemRouter = require('./routes/item')
 const clientRouter = require('./routes/client')
+const orderRouter = require('./routes/order')
 
 
 const app = express();
@@ -69,6 +70,7 @@ app.use('/upload', uploadRouter);
 app.use('/shop',shopRouter);
 app.use('/item',itemRouter);
 app.use('/client',clientRouter);
+app.use('/order',orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
