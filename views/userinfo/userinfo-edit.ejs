@@ -109,7 +109,7 @@
         <% if(type == "info"){ %>
             <div class="layui-form-item">
                 <label class="layui-form-label">权限</label>
-                <div class="layui-input-block">
+                <div class="layui-input-block" name="power" id="power">
                     <% if(userinfo.power == 1){ %>
                         <input type="text" disabled value="管理员" class="layui-input">
                     <% }else if(userinfo.power == 2){ %>
@@ -126,7 +126,7 @@
             </div>
         <% } %>
         <div class="layui-form-item business">
-            <label class="layui-form-label" for="business_license"><span class="x-red">*</span>经营许可证</label>
+            <label class="layui-form-label" for="business_license"><span class="x-red"></span>经营许可证</label>
             <div class="layui-input-block">
                 <input type="hidden" name="business_license" id="business_license" value="<%= userinfo.business_license %>"
                        class="layui-input">

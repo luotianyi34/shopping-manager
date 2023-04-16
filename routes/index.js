@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const conn = require("../util/db")
 const result = require("../util/json")
+const connection = require("../util/db");
 
 /*跳转登录页*/
 router.get('/', function(req, res, next) {
@@ -42,6 +43,36 @@ router.get('/nologin', function (req, res) {
   res.render("nologin");
 })
 
+router.get('/count',function (req, res){
+  const {loginInfo} = req.session;
+  if (loginInfo.power == 1) {
+    connection.query("select count(*) count from userinfo ",function (e,userinfo){
+      if (e) throw e ;
+      conn.query("select count(*) count from client ",function (e,client){
+        if (e) throw e ;
+        conn.query("select count(*) count from shop ",function (e,shop){
+          if (e) throw e ;
+        res.json(result.ok({
+          userCount: userinfo[0].count,
+          clientCount: client[0].count,
+          shopCount:shop[0].count,
+          }));
+        })
+       })
+      })
+  }else if (loginInfo.power == 2) {
+    conn.query("select count(*) count from item i left join (select shop_id from userinfo group by shop_id) u on i.s_id = u.shop_id where u.shop_id = ?", loginInfo.shop_id, function (e, item) {
+      if (e) throw e ;
+      conn.query("select count(o.s_id) count from `order` o left join (select shop_id from userinfo group by shop_id) u on o.s_id = u.shop_id where u.shop_id = ?", loginInfo.shop_id, function (e, order) {
+        if (e) throw e ;
+      res.json(result.ok({
+        itemCount:item[0].count,
+        orderCount:order[0].count,
+      }));
+    })
+  })
+  }
+})
 // router.get('/count', function (req, res) {
 //   const {loginInfo} = req.session;
 //   if (loginInfo.power == 1) {

@@ -22,7 +22,7 @@
     <![endif]-->
 </head>
     
-    <body>
+<body>
         <div class="x-nav">
             <span class="layui-breadcrumb">
                 <a href="order/list">商铺管理</a>
@@ -60,7 +60,7 @@
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <input type="text" name="order_name" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <button class="layui-btn" lay-submit="" lay-filter="sreach">
+                                    <button class="layui-btn" lay-submit="" lay-filter="search">
                                         <i class="layui-icon">&#xe615;</i></button>
                                 </div>
                             </form>
@@ -82,7 +82,7 @@
 </script>
     <script>
         var table;
-        layui.use([ 'table','form'],function () {
+        layui.use(['table','form'],function () {
             table = layui.table;
             const form = layui.form;
 
@@ -188,7 +188,7 @@
                 })
                 return false;
             });
-        })
+        });
 
     </script>
 </html>

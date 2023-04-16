@@ -111,20 +111,6 @@ router.post('/pwd', function (req, res) {
     });
 })
 
-router.get('/driver/select', function (req, res) {
-    connection.query("select * from userinfo where power = 2 order by id desc", function (e, r) {
-        if (e) throw e;
-        res.json(result.ok(r))
-    })
-})
-
-router.get('/apply/select', function (req, res) {
-    connection.query("select * from userinfo where power in (2,3) order by id desc", function (e, r) {
-        if (e) throw e;
-        res.json(result.ok(r))
-    })
-})
-
 function setSqlParams(query, sql, params, loginInfo) {
     if (query.username) {
         sql += " and u.username = ? ";

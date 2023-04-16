@@ -4,7 +4,7 @@ const result = require("../util/json")
 const connection = require("../util/db");
 
 router.get("/list", function (req, res) {
-    res.render("order/order-list.ejs",{loginInfo: req.session.loginInfo});
+    res.render("order/order-list",{loginInfo: req.session.loginInfo});
 })
 
 router.get("/page", function (req, res) {
@@ -12,21 +12,21 @@ router.get("/page", function (req, res) {
     const {loginInfo} = req.session;
     const params = [];
     let sql = "select o.*,s.`name` sname from `order` o left join  (select shop_id from userinfo group by shop_id) u on o.s_id = u.shop_id left join shop s on u.shop_id = s.id where 1 = 1 ";
-    if (loginInfo.power === 2) {
-        sql += "and u.shop_id = ? ";
-        params.push(loginInfo.shop_id);
+    if(query.controller){
+        sql+= "and controller = ? ";
+        params.push(query.controller);
     }
     if(query.way){
         sql+= "and way = ? ";
         params.push(query.way);
     }
-    if(query.controller){
-        sql+= "and controller = ? ";
-        params.push(query.controller);
-    }
     if (query.post) {
         sql += "and post = ? ";
         params.push(query.post)
+    }
+    if (loginInfo.power === 2) {
+        sql += "and u.shop_id = ? ";
+        params.push(loginInfo.shop_id);
     }
     sql += " order by o.id limit ?,? ";
     params.push((query.page - 1) * query.limit);
@@ -102,9 +102,17 @@ router.get("/select", function (req, res) {
     const {query} = req;
     let sql = "select * from order where 1 = 1 ";
     const params = [];
-    if (query.id) {
-        sql += "where id = ? ";
-        params.push(query.id)
+    if(query.way){
+        sql+= "and way = ? ";
+        params.push(query.way);
+    }
+    if(query.controller){
+        sql+= "and controller = ? ";
+        params.push(query.controller);
+    }
+    if (query.post) {
+        sql += "and post = ? ";
+        params.push(query.post)
     }
     sql += "order by id";
     connection.query(sql, params, function (e, itemList) {

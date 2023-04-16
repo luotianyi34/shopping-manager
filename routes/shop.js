@@ -31,9 +31,9 @@ router.get("/page",function (req, res) {
     sql += " order by s.id limit ?,?";
     params.push((query.page - 1) * query.limit);
     params.push(parseInt(query.limit));
-    connection.query(sql, params, function (e, shopList) {
+    connection.query(sql, params, function (e, dataList) {
         if (e) throw e;
-        let countSql = "select count(s.id) count from shop s left join (select shop_id from userinfo group by shop_id) u on u.shop_id = s.id ";
+        let countSql = "select count(s.id) count from shop s left join (select shop_id from userinfo group by shop_id) u on shop_id = s.id where 1=1 ";
         const countParams = [];
         if(query.name){
             countSql += "and name = ? ";
@@ -45,7 +45,7 @@ router.get("/page",function (req, res) {
         }
         connection.query(countSql, countParams, function (e, r) {
             if (e) throw e;
-            res.send(result.page(shopList, r[0].count));
+            res.send(result.page(dataList, r[0].count));
         });
     });
 })

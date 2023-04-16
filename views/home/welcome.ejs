@@ -26,12 +26,8 @@
                             <% if(loginInfo.power == 1){ %>
                                 管理员
                             <% }else if(loginInfo.power == 2){ %>
-                                负责人
-                            <% }else if(loginInfo.power == 3){ %>
-                                员工
-                            <% }else{ %>
-                                司机
-                            <% } %>
+                                商家
+                                <%}%>
                             <span class="x-red"><%= loginInfo.nickname %></span>！当前时间:<b id="time"></b>
                         </blockquote>
                     </div>
@@ -47,28 +43,21 @@
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>用户数</h3>
                                         <p>
-                                            <cite id="adminUserCount">66</cite></p>
+                                            <cite id="userinfoCount">66</cite></p>
+                                    </a>
+                                   </li>
+                                <li class="layui-col-md3 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>店铺数量</h3>
+                                        <p>
+                                            <cite id="shopCount">12</cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md3 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>车辆数</h3>
+                                        <h3>客户数量</h3>
                                         <p>
-                                            <cite id="adminCarCount">12</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>待审核</h3>
-                                        <p>
-                                            <cite id="adminApply20Count">99</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>总申请</h3>
-                                        <p>
-                                            <cite id="adminApplyCount">67</cite></p>
+                                            <cite id="clientCount">99</cite></p>
                                     </a>
                                 </li>
                             </ul>
@@ -76,65 +65,20 @@
                             <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
                                 <li class="layui-col-md3 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>用户数</h3>
+                                        <h3>商品种类</h3>
                                         <p>
-                                            <cite id="depUserCount">66</cite></p>
+                                            <cite id="itemCount">99</cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md3 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>申请数</h3>
+                                        <h3>订单数量</h3>
                                         <p>
-                                            <cite id="depMyApplyCount">12</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>待审核</h3>
-                                        <p>
-                                            <cite id="depExamApplyCount">99</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>总申请</h3>
-                                        <p>
-                                            <cite id="depApplyCount">67</cite></p>
+                                            <cite id="orderCount">67</cite></p>
                                     </a>
                                 </li>
                             </ul>
-                        <% }else if(loginInfo.power == 3){ %>
-                            <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>已申请</h3>
-                                        <p>
-                                            <cite id="userMyApplyCount">66</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>部门审核</h3>
-                                        <p>
-                                            <cite id="userDepApplyCount">12</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>管理员审核</h3>
-                                        <p>
-                                            <cite id="userAdminApplyCount">99</cite></p>
-                                    </a>
-                                </li>
-                                <li class="layui-col-md3 layui-col-xs6">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>总申请</h3>
-                                        <p>
-                                            <cite id="userApplyCount">67</cite></p>
-                                    </a>
-                                </li>
-                            </ul>
-                        <% } %>
+                        <% }%>
                     </div>
                 </div>
             </div>
@@ -192,18 +136,11 @@
                 method: "get",
                 dataType: "json",
                 success({data}) {
-                    $("#adminUserCount").text(data.userCount);
-                    $("#adminCarCount").text(data.carCount);
-                    $("#adminApply20Count").text(data.apply20Count);
-                    $("#adminApplyCount").text(data.applyCount);
-                    $("#depUserCount").text(data.userCount);
-                    $("#depMyApplyCount").text(data.myApplyCount);
-                    $("#depExamApplyCount").text(data.examApplyCount);
-                    $("#depApplyCount").text(data.applyCount);
-                    $("#userMyApplyCount").text(data.myApplyCount);
-                    $("#userDepApplyCount").text(data.depApplyCount);
-                    $("#userAdminApplyCount").text(data.adminCount);
-                    $("#userApplyCount").text(data.applyCount);
+                    $("#userinfoCount").text(data.userCount);
+                    $("#clientCount").text(data.clientCount);
+                    $("#shopCount").text(data.shopCount);
+                    $("#itemCount").text(data.itemCount);
+                    $("#orderCount").text(data.orderCount);
                 }
             });
             setTime();
